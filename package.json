@@ -8,11 +8,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://bitbucket.org/arthurkay/vidchat.git"
+    "url": "git+https://github.com/arthurkay/vidchat.git"
   },
   "author": "Arthur Kalikiti",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/arthurkay/vidchat#readme",
+  "homepage": "https://github.com/arthurkay/vidchat#README.md",
   "dependencies": {
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
