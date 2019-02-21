@@ -1,0 +1,25 @@
+{
+  "name": "vidchat",
+  "version": "1.0.0",
+  "description": "WebSockets vidchat using WebRTC",
+  "main": "Server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/arthurkay/vidchat.git"
+  },
+  "author": "Arthur Kalikiti",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/arthurkay/vidchat#readme",
+  "dependencies": {
+    "dotenv": "^6.2.0",
+    "express": "^4.16.4",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "mongodb": "^3.1.13",
+    "wss": "^3.3.4"
+  }
+}
