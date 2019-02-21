@@ -107,41 +107,107 @@ function handleLogin(success) {
         navigator.mediaDevices.getUserMedia({
             video: true,
             audio: true
-        }, (vidStream) => {
-            stream  = vidStream;
-            //Push the stream data to the video link
-            localVideo.src = window.URL.createObjectURL(stream);
-
-            //Configuration to use google STUN Servers
-            var configuration = {
-                "iceServers": [{ "url": "stun:stun2.1.google.com:19302" }]
-            }
-
-            yourConn = mozRTCPeerConnection(configuration)
-
-            //Setup a stream for peers to connect to
-            yourConn.addStream(stream)
-
-            //When a remote user adds their stream to ours, we display it
-            yourConn.onaddstream = (evt) => {
-                remoteVideo.src = window.URL.createObjectURL(e.stream);
-            }
-
-            //Setup ice handling
-            yourConn.onicecandidate = (e) => {
-                if (e.candidate) {
-                    send({
-                        type: 'candidate',
-                        candidate: e.candidate
-                    })
+        }).then(
+            (vidStream) => {
+                stream  = vidStream;
+                //Push the stream data to the video link
+                localVideo.srcObject=stream;
+    
+                //Configuration to use google STUN Servers
+                var configuration = {
+                    "iceServers": [{ "url": "stun:stun2.1.google.com:19302" }]
                 }
+    
+                yourConn = new RTCPeerConnection(configuration)
+    
+                //Setup a stream for peers to connect to
+                yourConn.addStream(stream)
+    
+                //When a remote user adds their stream to ours, we display it
+                yourConn.onaddstream = (evt) => {
+                    remoteVideo.srcObject=e.stream;
+                }
+    
+                //Setup ice handling
+                yourConn.onicecandidate = (e) => {
+                    if (e.candidate) {
+                        send({
+                            type: 'candidate',
+                            candidate: e.candidate
+                        })
+                    }
+                }
+    
             }
-
-        }, (err) => {
-            console.log('Oops!, something went wrong', err)
-            alert('The following error ocurred: ', err);
-        })
+        ).catch(
+            console.error
+        );
     }
 }
 
+
+callBtn.addEventListener('click', () => {
+    var callToUsername = callToUsernameInput.value;
+
+    if (callToUsername.length > 0) {
+        connectedUser = callToUsername;
+        
+        //Create an offer
+        yourConn.createOffer((offer) => {
+            send({
+                type: 'offer',
+                type: offer
+            });
+
+            yourConn.setLocalDescription(offer);
+        }, (error) => {
+            console.log('Oops!, something went wrong: ', error);
+        })
+    }
+});
+
+
+//When somebody sends an offer
+function handleOffer(offer, name) {
+    connectedUser = name;
+
+    yourConn.setRemoteDescription(new RTCSessionDescription(offer));
+
+    //Create an answer to an offer
+    yourConn.createAnswer((answer) => {
+        yourConn.setLocalDescription(answer);
+        send({
+            type: 'answer',
+            answer: answer
+        });   
+    }, (error) => {
+        console.log('My bad, ', error);
+    })
+}
+
+//How to handle an answer from a remote peer
+function handleAnswer(answer) {
+    yourConn.setRemoteDescription(new RTCSessionDescription(answer));
+}
+
+//Handle a peer when we got ICE
+function handleCandidate(candidate) {
+    yourConn.addIceCandidate(new RTCIceCandidate(candidate));
+}
+
+hangUpBtn.addEventListener('click', () => {
+    send({
+        type: 'leave'
+    })
+
+    handleLeave();
+})
+
+function handleLeave() {
+    connectedUser = null;
+    remoteVideo.srcObject = null;
+    yourConn.close();
+    yourConn.onicecandidate = null;
+    yourConn.onaddstream = null;
+}
 
