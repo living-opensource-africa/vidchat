@@ -39,6 +39,7 @@ connection.onmessage = (msg) => {
 
         //Default action, when all else fails
         default:
+        console.log('Now thats quite some imagination, you just managed to catch me off gaurd!');
         break;
     }
 
@@ -51,6 +52,7 @@ connection.onmessage = (msg) => {
 
     //When connection to server closes
     connection.onclose = (evt) => {
+        console.log(evt);
         console.log('WebSocket is now closed!')
     }
 
@@ -78,7 +80,8 @@ var hangUpBtn = document.querySelector('#hangUpBtn');
 var localVideo = document.querySelector('#localVideo');
 var remoteVideo = document.querySelector('#remoteVideo');
 var stream;
-var yourConn;
+var peerConn;
+
 
 //Hide callPage by default
 
@@ -115,21 +118,26 @@ function handleLogin(success) {
     
                 //Configuration to use google STUN Servers
                 var configuration = {
-                    "iceServers": [{ "url": "stun:stun2.1.google.com:19302" }]
+                    "iceServers": [{ "urls": "stun:stun2.1.google.com:19302" }]
                 }
     
-                yourConn = new RTCPeerConnection(configuration)
+                peerConn = new RTCPeerConnection(configuration)
+
+                //Creating a track
+                stream.getTracks().forEach((track) => {
+                    peerConn.addTrack(track, stream)
+                })
     
                 //Setup a stream for peers to connect to
-                yourConn.addStream(stream)
+                //peerConn.addTrack(stream)
     
                 //When a remote user adds their stream to ours, we display it
-                yourConn.onaddstream = (evt) => {
-                    remoteVideo.srcObject=e.stream;
+                peerConn.ontrack = (evt) => {
+                    remoteVideo.srcObject=evt.stream;
                 }
     
                 //Setup ice handling
-                yourConn.onicecandidate = (e) => {
+                peerConn.onicecandidate = (e) => {
                     if (e.candidate) {
                         send({
                             type: 'candidate',
@@ -153,13 +161,13 @@ callBtn.addEventListener('click', () => {
         connectedUser = callToUsername;
         
         //Create an offer
-        yourConn.createOffer((offer) => {
+        peerConn.createOffer((offer) => {
             send({
                 type: 'offer',
                 type: offer
             });
 
-            yourConn.setLocalDescription(offer);
+            peerConn.setLocalDescription(offer);
         }, (error) => {
             console.log('Oops!, something went wrong: ', error);
         })
@@ -171,11 +179,11 @@ callBtn.addEventListener('click', () => {
 function handleOffer(offer, name) {
     connectedUser = name;
 
-    yourConn.setRemoteDescription(new RTCSessionDescription(offer));
+    peerConn.setRemoteDescription(new RTCSessionDescription(offer));
 
     //Create an answer to an offer
-    yourConn.createAnswer((answer) => {
-        yourConn.setLocalDescription(answer);
+    peerConn.createAnswer((answer) => {
+        peerConn.setLocalDescription(answer);
         send({
             type: 'answer',
             answer: answer
@@ -187,12 +195,12 @@ function handleOffer(offer, name) {
 
 //How to handle an answer from a remote peer
 function handleAnswer(answer) {
-    yourConn.setRemoteDescription(new RTCSessionDescription(answer));
+    peerConn.setRemoteDescription(new RTCSessionDescription(answer));
 }
 
 //Handle a peer when we got ICE
 function handleCandidate(candidate) {
-    yourConn.addIceCandidate(new RTCIceCandidate(candidate));
+    peerConn.addIceCandidate(new RTCIceCandidate(candidate));
 }
 
 hangUpBtn.addEventListener('click', () => {
@@ -206,8 +214,8 @@ hangUpBtn.addEventListener('click', () => {
 function handleLeave() {
     connectedUser = null;
     remoteVideo.srcObject = null;
-    yourConn.close();
-    yourConn.onicecandidate = null;
-    yourConn.onaddstream = null;
+    peerConn.close();
+    peerConn.onicecandidate = null;
+    peerConn.onaddstream = null;
 }
 
