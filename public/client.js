@@ -27,7 +27,7 @@ connection.onmessage = (msg) => {
         handleAnswer(data.answer);
         break;
 
-        //REmote peer sending an ICE candidate
+        //Remote peer sending an ICE candidate
         case 'candidate':
         handleCandidate(data.candidate);
         break;
@@ -148,7 +148,9 @@ function handleLogin(success) {
     
             }
         ).catch(
-            console.error
+            evt => {
+                console.log("Oops! streaming error: "+evt)
+            }
         );
     }
 }
@@ -164,7 +166,7 @@ callBtn.addEventListener('click', () => {
         peerConn.createOffer((offer) => {
             send({
                 type: 'offer',
-                type: offer
+                offer: offer
             });
 
             peerConn.setLocalDescription(offer);
@@ -216,6 +218,6 @@ function handleLeave() {
     remoteVideo.srcObject = null;
     peerConn.close();
     peerConn.onicecandidate = null;
-    peerConn.onaddstream = null;
+    peerConn.ontrack = null;
 }
 
