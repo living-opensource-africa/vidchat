@@ -39,7 +39,7 @@ connection.onmessage = (msg) => {
 
         //Default action, when all else fails
         default:
-        console.log('Now thats quite some imagination, you just managed to catch me off gaurd!');
+        console.log('I have no idea what you want to do!');
         break;
     }
 
@@ -118,7 +118,7 @@ function handleLogin(success) {
     
                 //Configuration to use google STUN Servers
                 var configuration = {
-                    "iceServers": [{ "urls": "stun:stun2.1.google.com:19302" }]
+                    "iceServers": [{ "urls": "stun:stun1.l.google.com:19302" }]
                 }
     
                 peerConn = new RTCPeerConnection(configuration)
