@@ -1,7 +1,7 @@
 var name;
 var connectedUser;
 
-var connection = new WebSocket('wss://127.0.0.1:8443');
+var connection = new WebSocket('wss://localhost:8443');
 
 connection.onopen = () => {
     console.log('Successfully connected to signaling server');
@@ -39,13 +39,13 @@ connection.onmessage = (msg) => {
 
         //Default action, when all else fails
         default:
-        console.log('I have no idea what you want to do!');
+        console.log('No option selected, using default switch portion!');
         break;
     }
 
 }
 
-    //When something doent work out
+    //Something didn't work out
     connection.onerror = (err) => {
         console.log('Ooops!, got error ', err);
     }
@@ -118,23 +118,31 @@ function handleLogin(success) {
     
                 //Configuration to use google STUN Servers
                 var configuration = {
-                    "iceServers": [{ "urls": "stun:stun1.l.google.com:19302" }]
+                    iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
                 }
     
                 peerConn = new RTCPeerConnection(configuration)
 
                 //Creating a track
                 stream.getTracks().forEach((track) => {
-                    peerConn.addTrack(track, stream)
+                    peerConn.addTrack(track, stream);
+
                 })
     
                 //Setup a stream for peers to connect to
                 //peerConn.addTrack(stream)
     
                 //When a remote user adds their stream to ours, we display it
-                peerConn.ontrack = (evt) => {
-                    remoteVideo.srcObject=evt.stream;
+                //peerConn.ontrack = (evt) => {
+                //    remoteVideo.srcObject=evt.stream;
+                peerConn.ontrack = event => {
+                    const stream = event.streams[0];
+                    if (!remoteVideo.srcObject || remoteVideo.srcObject.id !== stream.id) {
+                        remoteVideo.srcObject = stream;
+                    }
                 }
+                
+                //}
     
                 //Setup ice handling
                 peerConn.onicecandidate = (e) => {
@@ -202,7 +210,10 @@ function handleAnswer(answer) {
 
 //Handle a peer when we got ICE
 function handleCandidate(candidate) {
-    peerConn.addIceCandidate(new RTCIceCandidate(candidate));
+    peerConn.addIceCandidate(new RTCIceCandidate(candidate))
+    .catch( err => {
+        console.log( "Something went wrong", err );
+    })
 }
 
 hangUpBtn.addEventListener('click', () => {

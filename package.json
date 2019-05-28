@@ -1,10 +1,10 @@
 {
   "name": "vidchat",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "WebSockets vidchat using WebRTC",
   "main": "Server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha || true"
   },
   "repository": {
     "type": "git",
@@ -19,7 +19,11 @@
     "fs": "0.0.1-security",
     "http": "0.0.0",
     "https": "^1.0.0",
-    "mongodb": "^3.1.13",
+    "ws": "^7.0.0",
     "wss": "^3.3.4"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4"
   }
 }

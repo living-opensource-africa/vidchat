@@ -86,7 +86,7 @@ wsServer.on('connection', (connection) => {
             var conn  =  users[data.name]
 
             if (conn != null) {
-                conection.otherName = data.name;
+                connection.otherName = data.name;
                 sendTo(conn, {
                     type: data.answer,
                     answer: data.answer
@@ -104,7 +104,7 @@ wsServer.on('connection', (connection) => {
                 sendTo(conn, {
                     type: 'candidate',
                     candidate: data.candidate
-                })
+                });
             }
 
             break;
