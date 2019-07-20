@@ -1,7 +1,7 @@
 var name;
 var connectedUser;
 
-var connection = new WebSocket('wss://localhost:8443');
+var connection = new WebSocket('wss://127.0.0.1:8443');
 
 connection.onopen = () => {
     console.log('Successfully connected to signaling server');
@@ -206,10 +206,12 @@ function handleOffer(offer, name) {
 //How to handle an answer from a remote peer
 function handleAnswer(answer) {
     peerConn.setRemoteDescription(new RTCSessionDescription(answer));
+    console.log('Recieved answer');
 }
 
 //Handle a peer when we got ICE
 function handleCandidate(candidate) {
+    console.log('Ice candidate recieved');
     peerConn.addIceCandidate(new RTCIceCandidate(candidate))
     .catch( err => {
         console.log( "Something went wrong", err );

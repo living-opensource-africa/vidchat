@@ -88,7 +88,7 @@ wsServer.on('connection', (connection) => {
             if (conn != null) {
                 connection.otherName = data.name;
                 sendTo(conn, {
-                    type: data.answer,
+                    type: 'answer',
                     answer: data.answer
                 })
             }
