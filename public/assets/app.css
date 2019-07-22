@@ -1,0 +1,43 @@
+body {
+    background: #ccc;
+    padding: 5% 0;
+}
+
+video {
+    background: #000;
+    border: 1px solid #888;
+}
+
+.call-page {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    width: 500px;
+    height: 500px;
+}
+
+#remoteVideo {
+    width: 800px;
+    height: 500px;
+}
+
+#localVideo {
+    position: relative;
+    left: 100px;
+    top: -250px;
+}
+
+@media screen and (max-width: 1205px) {
+    #remoteVideo {
+        width: 80%;
+        height: 75%;
+    }
+    
+    #localVideo {
+        position: relative;
+        left: 10%;
+        top: 80px;
+        width: 40%;
+        height: 35%;
+    }
+}

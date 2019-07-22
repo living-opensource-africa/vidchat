@@ -1,7 +1,7 @@
 var name;
 var connectedUser;
 
-var connection = new WebSocket('wss://127.0.0.1:8443');
+var connection = new WebSocket('wss://127.0.0.1:3443');
 
 connection.onopen = () => {
     console.log('Successfully connected to signaling server');
