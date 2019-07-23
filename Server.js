@@ -10,6 +10,7 @@ const fs = require('fs')
 let cert_key = fs.readFileSync(process.env.CERT_KEY)
 let cert_file = fs.readFileSync(process.env.CERT_FILE)
 let page = fs.readFileSync('./index.htm')
+let share = fs.readFileSync('./share.htm')
 let options = {key: cert_key, cert: cert_file}
 
 const app = express()
@@ -17,6 +18,9 @@ const app = express()
 app.use(express.static(__dirname + '/public'))
 app.get('/', (req, res) => {
     res.send(page.toString())
+})
+app.get('/share', (req, resp) => {
+    resp.send(share.toString())
 })
 
 let httpsServer = https.createServer(options, app)
