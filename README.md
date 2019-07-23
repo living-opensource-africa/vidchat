@@ -36,7 +36,7 @@ That will install all required node modules for the application to run.
 To run the app, head to the directory where the app is, i.e
 
 ```bash
-cd /path/to/where/the/app/is/located/radio-streama
+cd /path/to/where/the/app/is/located/vidchat
 npm run start
 ```
 
