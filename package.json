@@ -4,15 +4,16 @@
   "description": "WebSockets vidchat using WebRTC",
   "main": "Server.js",
   "scripts": {
-    "test": "mocha || true"
+    "test": "mocha || true",
+    "start": "node Server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/arthurkay/vidchat.git"
+    "url": "git+https://github.com/living-opensource-zambia/vidchat.git"
   },
   "author": "Arthur Kalikiti",
-  "license": "ISC",
-  "homepage": "https://github.com/arthurkay/vidchat#README.md",
+  "license": "Ihttps://github.com/living-opensource-zambia/vidchat.gitSC",
+  "homepage": "#README.md",
   "dependencies": {
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
