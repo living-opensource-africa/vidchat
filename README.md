@@ -35,3 +35,4 @@ The author(s) of this source code, do not in any way assume any lose and/or dama
 ## CONTRIBUTING
 
 If you have any feature request and/or want to add a few whistles and bells, feel free to contact us.
+But first, have a look at our [CONTRIBUTING.md](CONTRIBUTING.md)
